@@ -457,6 +457,12 @@ html{scroll-behavior:auto!important}
 .strategic-budget-map{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin-top:8px}.strategic-budget-map>div{border:1px solid var(--line);border-radius:8px;background:#fff;padding:9px}.strategic-budget-map span{display:block;font-size:8px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.strategic-budget-map strong{display:block;font-size:14px;margin-top:2px}.strategic-objective-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:9px}.strategic-objective-item{border:1px solid var(--line);border-radius:8px;padding:9px;background:#FBFDFE}.strategic-objective-item strong{font-size:10px;color:var(--navy);display:block}.strategic-objective-item span{display:block;font-size:9px;color:var(--muted);line-height:1.35;margin-top:3px}
 @media(max-width:820px){.strategic-kpis{grid-template-columns:repeat(2,1fr)}.strategic-budget-map{grid-template-columns:repeat(2,1fr)}.strategic-objective-list{grid-template-columns:1fr}.strategic-gate-head{flex-direction:column}}
 
+
+/* DOC ROI v24 · session actions aligned with the main tool tabs */
+.tab-session-actions{display:flex;gap:7px;align-items:center;margin-left:auto}
+.tabs .tab-session-actions .btn{min-height:34px;white-space:nowrap}
+@media(max-width:720px){.tab-session-actions{width:100%;margin-left:0}.tab-session-actions .btn{flex:1 1 140px}}
+
 </style>
 </head>
 <body>
@@ -468,14 +474,13 @@ html{scroll-behavior:auto!important}
     <a href="#method" id="methodNav">Method</a>
     <button class="topnav-link" data-jump="output">Output</button>
     <button class="topnav-link" data-jump="purchase">Marketing Attribution</button>
-    <button class="topnav-link" id="headerExample">Load Example</button>
     <button class="header-action" data-jump="build">Open tool</button>
   </nav><span id="readinessPill" class="hidden"></span>
 </header>
 <section class="hero docroi-anchor-target" id="method"><div class="hero-in"><div><div class="eyebrow">STRATEGY SPECIALIZATION · PRODUCT EXPERIENCE & CONVERSION</div><h1>Product Experience & Conversion</h1><p>Build the product experience from first marketing contact to purchase handoff. Structure the product page, reveal Product, Price, Promotion and Placement information progressively, preserve UTM and first-party journey data, and connect the final decision to measurable conversion and customer-level ROI.</p></div><div class="actions"><button class="btn blue" data-jump="build">Open Treatment</button><button class="btn" data-jump="output">View Output</button><button class="btn secondary" data-jump="purchase">Marketing Attribution</button></div></div></section>
 <main class="workspace">
-<nav class="tabs"><button class="tab active" data-mode="build">build</button><button class="tab" data-mode="output">output</button><button class="tab" data-mode="purchase">marketing attribution</button></nav>
-<div class="toolbar compact-toolbar" id="buildToolbar"><div class="group"><button class="btn secondary small" id="loadExample">Load Example</button><label class="btn ghost small filebtn">Load Project CSV<input type="file" id="importProject" accept=".csv,text/csv"></label><button class="btn ghost small" id="downloadProject">Download CSV</button><button class="btn ghost small" id="shareProjectCsv">Share CSV</button><span class="status">SESSION ONLY · REFRESH = RESET</span></div><button class="btn secondary small" id="resetProject">Reset</button></div>
+<nav class="tabs"><button class="tab active" data-mode="build">build</button><button class="tab" data-mode="output">output</button><button class="tab" data-mode="purchase">marketing attribution</button><div class="tab-session-actions"><button class="btn secondary small" id="loadExample">Load Example</button><button class="btn secondary small" id="resetProject">Reset</button></div></nav>
+<div class="toolbar compact-toolbar" id="buildToolbar"><div class="group"><label class="btn ghost small filebtn">Load Project CSV<input type="file" id="importProject" accept=".csv,text/csv"></label><button class="btn ghost small" id="downloadProject">Download CSV</button><button class="btn ghost small" id="shareProjectCsv">Share CSV</button><span class="status">SESSION ONLY · REFRESH = RESET</span></div></div>
 <section class="panel active" id="panel-build">
   <section class="strategic-gate" id="strategicGoalsGate">
     <div class="strategic-gate-head">
@@ -546,6 +551,7 @@ html{scroll-behavior:auto!important}
   <div class="purchase-intro-actions">
     <label class="btn secondary small filebtn">Load CSV<input type="file" id="loadBridgeCsv" accept=".csv,text/csv"></label>
     <button class="btn secondary small" id="loadBridgeExample">Load Example</button>
+    <button class="btn ghost small" id="downloadAttributionHtml">Download Final HTML</button>
   </div>
 
   <div class="bridge-demo-hero hidden" id="bridgeDemoHero">
@@ -1374,18 +1380,10 @@ function renderExperience(){
   document.getElementById('buyExp').onclick=()=>alert('Sandbox only. No customer data or event is stored in the DOC ROI builder.');
   document.getElementById('saveExp').onclick=()=>alert('Sandbox only. Nothing is saved or tracked here.')
 }
-function promptText(){return`Build a professional ecommerce Product Detail Page with progressive product information using the DOC ROI Information Cascade method from the following canonical state.\n\nRULES\n- Unknown and pending fields must remain explicitly UNKNOWN or PENDING.\n- Do not invent facts, claims, evidence, certifications, reviews, stock, channels, keywords or behaviours.\n- Preserve the stable Product Core while Product, Price, Promotion and Placement progressively reveal value.\n- The customer-facing page must not expose internal 4P or information-level labels.\n- Original acquisition UTM data remains immutable; internal interactions use event tags.\n- First-party behavioural tracking requires explicit consent.\n- COLD = consented arrival without second-depth interaction.\n- WARM = any value path reaches the second information depth.\n- HOT = a commercial action is applied or a product contact request is completed.\n- One active commercial benefit per order unless stacking is explicitly allowed. A product contact request is separate from the commercial benefit.\n- Economic incentives must respect the minimum contribution threshold.\n- Generate a Marketing → Purchase Bridge dataset from observable session, acquisition, cascade, product and order-draft data only. Do not invent payment, realised margin, ABCD or SPO fields.\n- Preserve session_id and visitor_key as bridge identifiers until a stable customer_key exists.
-- The Buy Now CTA must open a simple bank-transfer checkout.
-- Generate a sequential browser-local order number; a globally unique sequence requires a central endpoint.
-- Collect delivery details and customer email only in the final customer checkout, never in the builder.
-- Require a PDF transfer proof when configured.
-- Do not claim payment is received until it is verified.
-- Persist the final order handoff and payment-proof metadata; store the PDF locally in-browser when running without a backend.
-- Produce exactly two operational CSV views: Insights MKT → Purchase and Marketing Attribution.
-- Marketing Attribution must preserve UTM + visitor/session + progressive-information journey + order and calculate configured acquisition, policy, product and transaction costs.
-- Never treat transfer-proof upload as realised revenue. realised_revenue is recognised only after payment_verified is YES / simulated as verified in a classroom dataset.
-- Keep non-buyers in attribution analysis whenever event-level source data is available so acquisition spend is not biased toward converters only.
-\nCANONICAL STATE\n${JSON.stringify(S,null,2)}`}
+function promptText(){
+  const Q=cp(S);if(Q.checkout)Q.checkout={enabled:false};
+  return`Build a professional ecommerce Product Detail Page with progressive product information using the DOC ROI Information Cascade method from the following canonical state.\n\nRULES\n- Unknown and pending fields must remain explicitly UNKNOWN or PENDING.\n- Do not invent facts, claims, evidence, certifications, reviews, stock, channels, keywords or behaviours.\n- Preserve the stable Product Core while Product, Price, Promotion and Placement progressively reveal value.\n- The customer-facing page must not expose internal 4P or information-level labels.\n- Original acquisition UTM data remains immutable; internal interactions use event tags.\n- First-party behavioural tracking requires explicit consent.\n- COLD = consented arrival without second-depth interaction.\n- WARM = any value path reaches the second information depth.\n- HOT = a commercial action is applied or a product contact request is completed.\n- One active commercial benefit per order unless stacking is explicitly allowed. A product contact request is separate from the commercial benefit.\n- Economic incentives must respect the minimum contribution threshold.\n- Preserve session_id and visitor_key as journey identifiers until a stable customer_key exists.\n- The primary Buy CTA belongs to the next Purchase / Order process: do not render or execute bank transfer, payment-proof upload, banking details or payment verification inside this Product Experience page.\n- A Buy CTA click may be recorded as purchase intent / handoff evidence for attribution, but it must not open a payment layer in this page.\n- Preserve UTM + visitor/session + progressive-information journey data so downstream Purchase and Marketing Attribution processes can use the same lineage.\n- Keep non-buyers in attribution analysis whenever event-level source data is available so acquisition spend is not biased toward converters only.\n\nCANONICAL STATE\n${JSON.stringify(Q,null,2)}`
+}
 async function renderOutput(){const frame=document.getElementById('finalPreview');if(frame){frame.srcdoc=await standalone(true)}}
 function landingTxt(){const lines=[];lines.push('DOC ROI · PRODUCT EXPERIENCE SPECIFICATION','');lines.push('PROJECT',S.metadata.projectName,'');lines.push('PRODUCT',`Brand: ${S.brand.brand||'UNKNOWN'}`,`Product: ${S.product.productName||'UNKNOWN'}`,`Category: ${S.product.category||'UNKNOWN'}`,`Price: ${money(S.pricing.grossPrice)}`,`Promise: ${S.product.productPromise||'UNKNOWN'}`,'');lines.push('BUYER PERSONA 4P KEYWORDS');P.forEach(p=>{lines.push('',p);(S.marketing.keywords[p]||[]).forEach(k=>lines.push('- '+k))});lines.push('','PROGRESSIVE PRODUCT INFORMATION · DOC ROI INFORMATION CASCADE METHOD');P.forEach(p=>{const c=S.marketing.cascades[p];lines.push('',`${p} · ${c.publicName}`,'Signal: '+c.signal,'Reveal: '+c.reveal,'Activation: '+c.activation,'Benefit: '+c.benefit)});lines.push('','ACQUISITION',JSON.stringify(S.marketing.acquisition,null,2),'','MARKETING OBJECTIVE',JSON.stringify(S.marketing.objective,null,2),'','ECONOMICS',JSON.stringify(S.marketing.economics,null,2));return lines.join('\n')}
 async function printFinal(){const h=await standalone(),b=new Blob([h],{type:'text/html'}),u=URL.createObjectURL(b),w=window.open(u,'_blank');if(!w){alert('Allow pop-ups to print the final landing page.');return}w.addEventListener('load',()=>setTimeout(()=>{w.focus();w.print()},350),{once:true});setTimeout(()=>URL.revokeObjectURL(u),30000)}
@@ -1393,7 +1391,8 @@ async function shareFinal(){const h=await standalone(),file=new File([h],'doc-ro
 function dl(name,data,type='text/plain'){const b=data instanceof Blob?data:new Blob([data],{type}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),500)}function csv(x){return'"'+String(x??'').replaceAll('"','""')+'"'}function exportKeywords(){const r=[['Marketing policy','Keyword']];P.forEach(p=>S.marketing.keywords[p].forEach(k=>r.push([p,k])));dl('doc-roi-buyer-persona-4p-keywords.csv',r.map(x=>x.map(csv).join(',')).join('\n'),'text/csv')}function exportEvents(){const r=[['timestamp','visitor_id','session_id','acquisition_4p','path','depth','action','temperature','detail']];session.events.forEach(e=>r.push([e.ts,session.visitorId,session.sessionId,S.marketing.acquisition.entryPolicy,e.policy,e.depth,e.action,e.temperature,e.detail]));dl('doc-roi-product-experience-event-log.csv',r.map(x=>x.map(csv).join(',')).join('\n'),'text/csv')}
 async function pngBlob(){if(!window.html2canvas)throw Error('html2canvas unavailable');const c=await html2canvas(pdp,{scale:2,useCORS:true,allowTaint:false,backgroundColor:'#fff'});return await new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej(Error('PNG failed')),'image/png'))}async function makePng(){try{dl('doc-roi-pdp.png',await pngBlob(),'image/png')}catch(e){alert('PNG export could not complete. A remote image may block canvas export.')}}async function makePdf(){try{const b=await pngBlob(),u=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(b)});if(window.jspdf?.jsPDF){const im=new Image();await new Promise((res,rej)=>{im.onload=res;im.onerror=rej;im.src=u});const pdf=new window.jspdf.jsPDF({orientation:im.width>=im.height?'landscape':'portrait',unit:'px',format:[im.width,im.height]});pdf.addImage(u,'PNG',0,0,im.width,im.height);pdf.save('doc-roi-pdp.pdf')}else window.print()}catch{window.print()}}
 async function standalone(preview=false){
-  const X=cp(S),payload=JSON.stringify(X).replaceAll('<','\\u003c');
+  const X=cp(S),publicState=cp(X);if(publicState.checkout)publicState.checkout={enabled:false};
+  const payload=JSON.stringify(publicState).replaceAll('<','\\u003c');
   const logo=X.brand.assets.brandLogoData||((X.brand.assets.brandLogo&&X.brand.assets.brandLogo!=='PENDING'&&X.brand.assets.brandLogo!=='UNKNOWN')?X.brand.assets.brandLogo:'');
   const profileLogo=(X.brand.assets.profileLogo&&X.brand.assets.profileLogo!=='PENDING'&&X.brand.assets.profileLogo!=='UNKNOWN')?X.brand.assets.profileLogo:'';
   const isDonEspadinDemo=String(X.brand.brand||'').toLowerCase().includes('espad');
@@ -1442,20 +1441,6 @@ async function standalone(preview=false){
 @media(max-width:650px){.experienceGrid{grid-template-columns:1fr;grid-template-areas:"media" "core" "price" "productpath" "promo" "placement" "evidence" "trust" "faq" "specs" "service" "complements"}.heroMedia{min-height:320px}.coreFrame h1{font-size:29px}.buyRow{flex-direction:column}}
 .acceptance{position:fixed;z-index:50;left:16px;right:16px;bottom:16px;max-width:900px;margin:auto;background:#05070b;color:#fff;padding:17px;border-radius:8px;box-shadow:0 25px 70px rgba(0,0,0,.3)}.acceptance p{font-size:12px;color:#d7e3eb;line-height:1.5;margin:7px 0 12px}.modal{position:fixed;z-index:60;inset:0;background:rgba(0,0,0,.58);display:grid;place-items:center;padding:18px}.modalBox{width:min(650px,100%);max-height:86vh;overflow:auto;background:#fff;border-radius:8px;padding:20px}.modalBox h2{margin-top:0}.authGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.authGrid input{padding:10px;border:1px solid var(--line);border-radius:8px}.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px;display:grid;gap:6px}.event{font-size:11px;border:1px solid var(--line);border-radius:8px;padding:8px;background:#f8fafb}.note{font-size:10px;color:var(--muted);line-height:1.45}
 .finalFooter{background:#000;color:#c0c7d1;padding:30px 20px;text-align:center;margin-top:22px}.finalFooter a{color:#fff;text-decoration:none}.finalFooter p{font-size:11px;margin:10px 0 0}
-.checkoutLayer{position:fixed;inset:0;z-index:90;background:rgba(7,12,18,.72);backdrop-filter:blur(7px);display:grid;place-items:center;padding:18px;overflow:auto}
-.checkoutPopup{width:min(820px,100%);background:var(--brand-surface);border:1px solid var(--line);border-radius:18px;box-shadow:0 28px 90px rgba(0,0,0,.30);overflow:hidden}
-.checkoutTop{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;background:var(--brand-primary);color:#fff;padding:18px 20px}
-.checkoutTop small{display:block;font-size:9px;letter-spacing:.10em;text-transform:uppercase;font-weight:900;opacity:.78}.checkoutTop h2{margin:4px 0 0;font-size:23px}.checkoutOrderNo{border:1px solid rgba(255,255,255,.40);border-radius:999px;padding:8px 11px;font-size:12px;font-weight:900;white-space:nowrap}
-.checkoutContent{padding:18px;display:grid;gap:12px}.checkoutIntro{display:grid;grid-template-columns:1.15fr .85fr;gap:12px}
-.orderSummaryBox,.bankBox,.customerBox,.proofBox,.legalBox{border:1px solid var(--line);border-radius:12px;background:#fff;padding:13px}
-.orderSummaryBox h3,.bankBox h3,.customerBox h3,.proofBox h3,.legalBox h3{font-size:13px;margin:0 0 9px}.orderRows{display:grid;gap:6px}.orderRows .r{display:flex;justify-content:space-between;gap:10px;font-size:11px}.orderRows .total{font-size:16px;font-weight:900;border-top:1px solid var(--line);padding-top:8px;margin-top:3px}
-.bankBox{background:color-mix(in srgb,var(--brand-secondary) 14%,#fff)}.bankField{display:grid;gap:3px;padding:8px 0;border-bottom:1px solid color-mix(in srgb,var(--line) 74%,transparent)}.bankField:last-child{border-bottom:0}.bankField>span{font-size:9px;letter-spacing:.06em;text-transform:uppercase;font-weight:900;color:#6A5A4C}.bankField strong,.bankField div{font-size:11px;line-height:1.5;color:#394a57}.bankField small{font-size:9px;line-height:1.4;color:#756A61}.bankSecretRow{display:grid;grid-template-columns:minmax(0,1fr) 36px;gap:6px;align-items:center}.bankAccount{display:block;margin:0;background:#fff;border:1px solid var(--line);border-radius:9px;padding:9px;font-size:12px;font-weight:900;word-break:break-all;letter-spacing:.04em}.bankSecretToggle{width:36px;height:36px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--brand-primary);display:grid;place-items:center;padding:0}.bankSecretToggle svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8}.bankSecretToggle.on{background:color-mix(in srgb,var(--brand-secondary) 24%,#fff)}
-.customerFields{display:grid;grid-template-columns:1fr 1fr;gap:9px}.checkoutField{display:grid;gap:5px}.checkoutField span{font-size:10px;font-weight:850;color:var(--muted)}.checkoutField input{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px;font:inherit}
-.proofBox input{width:100%;font-size:12px}.proofState{font-size:10px;color:var(--muted);margin-top:6px}
-.legalAccept{display:flex;gap:8px;align-items:flex-start;font-size:11px;line-height:1.5}.legalAccept input{margin-top:2px}.legalCopy{font-size:10px;line-height:1.5;color:var(--muted);margin-top:9px}
-.checkoutButtons{display:grid;grid-template-columns:1fr auto;gap:8px}.checkoutButtons .buyFinal{font-size:16px;padding:14px 20px}.checkoutStatus{display:none;border:1px solid #a9d2bd;background:#eff9f3;color:#245a3f;border-radius:12px;padding:13px}.checkoutStatus.show{display:block}.checkoutStatus h3{margin:0 0 5px}
-@media(max-width:720px){.checkoutIntro{grid-template-columns:1fr}.customerFields{grid-template-columns:1fr}.checkoutButtons{grid-template-columns:1fr}.checkoutOrderNo{white-space:normal}}
-
 @media(max-width:900px){.commerce{grid-template-columns:1fr}.pathsRight{grid-template-columns:repeat(2,1fr)}.productTop{grid-template-columns:1fr}.heroMedia{height:380px}.pathsBottom{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:620px){.wrap{padding:18px 14px 40px}.siteTop{align-items:flex-start}.topActions{justify-content:flex-end}.pathsRight,.pathsBottom,.productDetails,.authGrid{grid-template-columns:1fr}.heroMedia{height:320px}.productCopy h1{font-size:29px}.buyRow{flex-direction:column}.brandName{display:none}}
 </style></head>
@@ -1465,59 +1450,6 @@ async function standalone(preview=false){
 <div class="acceptance ${preview?'hidden':''}" id="privacy"><strong>${esc(S.marketing.consent.headline)}</strong><p>${esc(S.marketing.consent.text)}</p><button class="btn light" id="ok">Accept personalised experience</button><button class="btn secondary" id="ess">Essential only</button></div>
 ${preview?'':`<div class="modal hidden" id="analyticsModal"><div class="modalCard analyticsCard"><div class="modalHead"><div><small>OWNER ANALYTICS</small><h3>Session & purchase bridge export</h3></div><button class="btn ghost small" id="closeAnalytics">Close</button></div><p class="modalText">Filter the records stored by this browser. Full cross-device analytics requires the configured central webhook.</p><div class="analyticsFilters"><label>From<input type="date" id="analyticsFrom"></label><label>To<input type="date" id="analyticsTo"></label></div><div id="analyticsKpis" class="analyticsKpis"></div><div class="analyticsActions"><button class="btn small" id="downloadAnalyticsPurchase">Insights MKT → Purchase CSV</button><button class="btn secondary small" id="downloadAnalyticsMarketing">Marketing / CRM Attribution CSV</button></div></div></div><div class="modal hidden" id="accountModal"><div class="modalBox"><button class="btn secondary small" id="closeAccount" style="float:right">Close</button><h2>Customer access</h2><p>Register to open the Event Log created by this final page.</p><div class="authGrid"><input id="accountEmail" type="email" placeholder="Email"><input id="accountPassword" type="password" placeholder="Password"></div><p><button class="btn" id="registerBtn">Register / open Event Log</button></p><div class="note">Prototype access. A production deployment should connect authentication and storage to a secure backend.</div><div id="eventLog" class="log"></div></div></div>`}
 
-<div class="checkoutLayer hidden" id="checkoutLayer">
-  <section class="checkoutPopup" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
-    <div class="checkoutTop">
-      <div><small>LEVEL 4 · ORDER & BANK TRANSFER</small><h2 id="checkoutTitle">Complete your order</h2></div>
-      <div class="checkoutOrderNo" id="checkoutOrderNo">ORDER —</div>
-    </div>
-    <div class="checkoutContent">
-      <div class="checkoutIntro">
-        <section class="orderSummaryBox">
-          <h3>Order summary</h3>
-          <div class="orderRows" id="coRecap"></div>
-        </section>
-        <section class="bankBox">
-          <h3>Bank transfer details</h3>
-          <div class="bankField"><span>Seller / legal entity</span><strong id="coSeller"></strong></div>
-          <div class="bankField"><span>Bank</span><strong id="coBank"></strong></div>
-          <div class="bankField"><span>IBAN / transfer destination</span><div class="bankSecretRow"><code class="bankAccount" id="coAccount"></code><button class="bankSecretToggle" id="coAccountToggle" type="button" aria-label="Show bank account"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.6"/></svg></button></div><small>The account is hidden by default. Use the eye only when you need to verify the configured transfer destination.</small></div>
-          <div class="bankField"><span>Account holder</span><strong id="coAccountHolder"></strong></div>
-          <div class="bankField"><span>Transfer reference</span><strong id="coTransferReference"></strong></div>
-          <div class="bankField"><span>Transfer instructions</span><div id="coTransferInstructions"></div></div>
-          <div class="bankField"><span>Order contact</span><div id="coOrderContact"></div></div>
-        </section>
-      </div>
-
-      <section class="customerBox">
-        <h3>Your contact details</h3>
-        <div class="customerFields">
-          <label class="checkoutField"><span>Email</span><input id="coEmail" type="email" autocomplete="email" placeholder="you@example.com"></label>
-          <label class="checkoutField"><span>Phone</span><input id="coPhone" autocomplete="tel" placeholder="+34 ..."></label>
-        </div>
-      </section>
-
-      <section class="proofBox">
-        <h3>Bank-transfer proof</h3>
-        <input id="coProof" type="file" accept="application/pdf,.pdf">
-        <div class="proofState" id="coProofState">PDF transfer proof not uploaded yet.</div>
-      </section>
-
-      <section class="legalBox">
-        <h3>Confirmation</h3>
-        <label class="legalAccept"><input type="checkbox" id="coLegalAccept"> <span id="coLegalAcceptText"></span></label>
-        <div class="legalCopy" id="coLegalNotice"></div>
-      </section>
-
-      <div class="checkoutButtons">
-        <button class="btn buyFinal" id="coSubmit">BUY · SUBMIT ORDER</button>
-        <button class="btn secondary" id="coCancel">Back to product</button>
-      </div>
-
-      <div class="checkoutStatus" id="coStatus"></div>
-    </div>
-  </section>
-</div>
 <footer class="finalFooter"><a href="https://doc-roi-my-cabinet.vercel.app/" target="_blank" rel="noreferrer"><strong>DOC ROI</strong></a><p>Product Experience & Conversion</p></footer>
 <script>
 const S=${payload},P=["PRODUCT","PRICE","PROMOTION","PLACEMENT"],PREVIEW=${preview?'true':'false'};
@@ -1537,7 +1469,7 @@ events=PREVIEW?[]:JSON.parse(localStorage.getItem(STORE_EVENTS)||"[]"),
 bridge=PREVIEW?[]:JSON.parse(localStorage.getItem(STORE_BRIDGE)||"[]"),
 orders=PREVIEW?[]:JSON.parse(localStorage.getItem(STORE_ORDERS)||"[]"),
 visitorKey=PREVIEW?"PREVIEW":decodeURIComponent(getCookie(VISITOR_COOKIE)||localStorage.getItem(STORE_VISITOR)||""),
-sessionId="S-"+Math.random().toString(36).slice(2,9).toUpperCase(),firstPath="UNKNOWN",productInterest="UNKNOWN",checkoutOrderNo="",checkoutProofFile=null;
+sessionId="S-"+Math.random().toString(36).slice(2,9).toUpperCase(),firstPath="UNKNOWN",productInterest="UNKNOWN";
 const m=n=>new Intl.NumberFormat("en",{style:"currency",currency:S.pricing.currency||"EUR"}).format(Number(n||0)),known=v=>v!==undefined&&v!==null&&String(v).trim()!==""&&v!=="PENDING"&&v!=="UNKNOWN";
 function sendCentral(record){const a=S.marketing.analytics||{};if(a.collectionMode!=="webhook"||!a.webhookUrl||PREVIEW)return;fetch(a.webhookUrl,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(record),keepalive:true}).catch(()=>{})}function persist(){if(PREVIEW)return;localStorage.setItem(STORE_EVENTS,JSON.stringify(events));localStorage.setItem(STORE_BRIDGE,JSON.stringify(bridge));localStorage.setItem(STORE_ORDERS,JSON.stringify(orders));if(visitorKey)localStorage.setItem(STORE_VISITOR,visitorKey)}const track=(path,action,detail="")=>{if(PREVIEW||consent!=="accepted")return;if(firstPath==="UNKNOWN"&&path!=="SYSTEM")firstPath=path;const rec={time:new Date().toISOString(),event_date:new Date().toISOString().slice(0,10),visitor_key:visitorKey,session_id:sessionId,path,depth:path&&depth[path]?depth[path]:0,action,detail,utm_source:ACQ.source||"UNKNOWN",utm_medium:ACQ.medium||"UNKNOWN",utm_campaign:ACQ.campaign||"UNKNOWN",utm_content:ACQ.content||"UNKNOWN",utm_term:ACQ.term||"UNKNOWN",utm_id:ACQ.id||"UNKNOWN",entry_4p:ACQ.entryPolicy||"UNKNOWN",active_benefit_type:active?.type||"NONE",active_benefit_label:active?.label||"NONE"};events.push(rec);persist();sendCentral({record_type:"marketing_event",dataset_id:(S.marketing.analytics||{}).datasetId||"DOC_ROI_MARKETING_PURCHASE_BRIDGE",...rec})};
 function economics(){const p=+S.pricing.grossPrice||0,e=S.marketing.economics,pay=p*(+e.paymentPct||0)/100,base=p-(+e.unitCost||0)-(+e.fulfilmentCost||0)-pay,min=+e.minContribution||0,two=p-2*(+e.unitCost||0)-(+e.fulfilmentCost||0)-pay,mini=base-(+e.miniCost||0);if(two>=min)return["2 units for the price of 1","TWO_FOR_ONE"];if(mini>=min)return["Bonus / sample unit included","MINI_GIFT"];if(base-p*.05>=min)return["5% price benefit","PERCENT_5"];return["Evidence-led value · no direct discount","NO_DISCOUNT"]}
@@ -1558,233 +1490,8 @@ function complementsHtml(){const cross=(S.crossSell||[]).filter(x=>known(x.title
 function pathHtml(p){const c=S.marketing.cascades[p],d=depth[p],priority=ACQ.entryPolicy===p,selected=active?.policy===p||p==="PRODUCT"&&contactDone;let extra="";if(d>=2)extra+='<div class="reveal"><strong>'+c.reveal+'</strong><span>'+c.activation+'</span></div>';if(p==="PRODUCT"&&contactOpen)extra+='<div class="lead"><input id="productEmail" type="email" placeholder="Email"><button class="btn small" onclick="submitContact()">Keep me informed</button></div>';if(p==="PRODUCT"&&contactDone)extra+='<div class="result">Thank you. Your product discovery request has been recorded in this page session.</div>';if(d>=3&&selected&&active?.policy===p)extra+='<div class="result">'+active.label+'</div>';return '<article class="path path-'+p+' '+(priority?"priority":"")+'"><small>'+(priority?"Relevant to how you arrived":"Explore what matters to you")+'</small><h3>'+c.publicName+'</h3><p>'+c.signal+'</p>'+extra+'<div class="pathActions"><button class="btn '+(d===1?"":"secondary")+' small" onclick="reveal(\\''+p+'\\')" '+(d>=3?"disabled":"")+'>'+(d===1?"Discover more":d===2?(p==="PRODUCT"?"Continue":"Apply this option"):"Applied")+'</button>'+(d>1?'<button class="btn ghost small" onclick="resetPath(\\''+p+'\\')">Cancel · back to start</button>':'')+'</div></article>'}
 function experienceHtml(){return mediaHtml()+coreHtml()+evidenceHtml()+trustHtml()+faqHtml()+specsHtml()+pathHtml("PRICE")+pathHtml("PRODUCT")+pathHtml("PROMOTION")+pathHtml("PLACEMENT")+serviceHtml()+complementsHtml()}
 
-function nextOrderNumber(){
-  const prefix=(S.checkout?.orderPrefix||"ORD").replace(/[^A-Za-z0-9_-]/g,"").toUpperCase()||"ORD";
-  if(PREVIEW)return prefix+"-PREVIEW-000001";
-  const n=(Number(localStorage.getItem(STORE_ORDER_SEQ)||0)+1);
-  localStorage.setItem(STORE_ORDER_SEQ,String(n));
-  return prefix+"-"+String(n).padStart(6,"0");
-}
-async function stableCustomerKey(email){
-  const clean=String(email||"").trim().toLowerCase();
-  if(!clean)return"UNKNOWN";
-  try{
-    const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(clean));
-    return"CUS-"+Array.from(new Uint8Array(buf)).slice(0,8).map(x=>x.toString(16).padStart(2,"0")).join("").toUpperCase();
-  }catch(e){
-    let h=0;for(const c of clean)h=((h<<5)-h)+c.charCodeAt(0)|0;
-    return"CUS-"+Math.abs(h).toString(16).toUpperCase().padStart(8,"0");
-  }
-}
-function deepestState(){const p=P.reduce((a,x)=>depth[x]>depth[a]?x:a,P[0]);return{path:p,depth:depth[p]>=3?"ACTIVATE":depth[p]===2?"REVEAL":"SIGNAL"}}
-function confirmationDeadline(){const h=Number(S.checkout?.confirmationWindowHours||48);return new Date(Date.now()+h*3600000).toISOString()}
-function orderLineData(){
-  const o=totals();
-  return{
-    product_id:S.identity.productId||"UNKNOWN",
-    sku:S.identity.sku||"UNKNOWN",
-    product_name:S.product.productName||"UNKNOWN",
-    variant:S.identity.variant||"UNKNOWN",
-    quantity:o.qty,
-    list_price:+S.pricing.grossPrice||0,
-    applied_unit_price:o.price,
-    product_subtotal:Math.round(o.price*100)/100,
-    shipping_before:+S.commercialTerms.shippingCharge||0,
-    shipping_after:o.shipping,
-    order_total:o.total
-  };
-}
-let bankSecretVisible=false;
-function maskBankAccount(value){
-  const raw=String(value||'').trim();
-  if(!raw||raw==='PENDING'||raw==='UNKNOWN')return'PENDING';
-  const compact=raw.replace(/\s+/g,'');
-  const last=compact.slice(-4);
-  return'•••• •••• •••• •••• '+last;
-}
-function updateBankAccountDisplay(){
-  const el=document.getElementById('coAccount'),btn=document.getElementById('coAccountToggle');if(!el)return;
-  el.textContent=bankSecretVisible?(S.checkout?.bankAccount||'PENDING'):maskBankAccount(S.checkout?.bankAccount);
-  if(btn){btn.classList.toggle('on',bankSecretVisible);btn.setAttribute('aria-label',bankSecretVisible?'Hide bank account':'Show bank account')}
-}
-function openCheckout(){
-  if(!S.checkout?.enabled)return alert("Checkout is not enabled in this product configuration.");
-  if(!PREVIEW&&consent==="unset"){document.getElementById("privacy").classList.remove("hidden");return}
-  if(!known(S.checkout?.bankAccount))return alert("Bank-transfer destination is not configured. Complete Commerce & Conversion before publishing.");
-  checkoutOrderNo=nextOrderNumber();checkoutProofFile=null;
-  const o=totals();
-  document.getElementById("checkoutLayer").classList.remove("hidden");
-  document.getElementById("checkoutOrderNo").textContent=checkoutOrderNo;
-  document.getElementById("coSeller").textContent=S.checkout.sellerLegalName||S.brand.brand||"Seller";
-  document.getElementById("coBank").textContent=S.checkout.bankName||"Bank";
-  bankSecretVisible=false;updateBankAccountDisplay();
-  document.getElementById("coAccountHolder").textContent=S.checkout.accountHolder||"PENDING";document.getElementById("coTransferReference").textContent=checkoutOrderNo;
-  document.getElementById("coTransferInstructions").textContent=S.checkout.transferInstructions||"Use the order number as the bank-transfer reference.";
-  const contact=[S.checkout.orderContactEmail,S.checkout.orderContactPhone].filter(known).join(" · ");
-  document.getElementById("coOrderContact").textContent=contact||"PENDING";
-  document.getElementById("coRecap").innerHTML=
-    '<div class="r"><span>'+S.product.productName+'</span><strong>'+m(o.price)+'</strong></div>'+
-    '<div class="r"><span>Quantity</span><strong>'+o.qty+'</strong></div>'+
-    '<div class="r"><span>Delivery</span><strong>'+(o.shipping===0?"INCLUDED":m(o.shipping))+'</strong></div>'+
-    '<div class="r"><span>Selected benefit</span><strong>'+(active?.label||"None")+'</strong></div>'+
-    '<div class="r total"><span>Total to transfer</span><strong>'+m(o.total)+'</strong></div>';
-  document.getElementById("coProof").value="";
-  document.getElementById("coProofState").textContent="PDF transfer proof not uploaded yet.";
-  document.getElementById("coLegalAccept").checked=false;
-  document.getElementById("coLegalAcceptText").textContent=
-    "I understand that this order remains pending until the transfer is verified. If payment cannot be confirmed within "+
-    Number(S.checkout.confirmationWindowHours||48)+
-    " hours, the order may be cancelled. If payment has been received but the order cannot be confirmed, the configured refund process applies.";
-  document.getElementById("coLegalNotice").innerHTML=
-    '<strong>Order terms.</strong> '+(S.checkout.termsText||"PENDING")+
-    '<br><strong>Data purpose.</strong> '+(S.checkout.dataPurpose||"PENDING")+
-    '<br><strong>Data-rights contact.</strong> '+(S.checkout.dataControllerEmail||"PENDING");
-  const st=document.getElementById("coStatus");st.classList.remove("show");st.innerHTML="";
-  track("SYSTEM","checkout_started",checkoutOrderNo);
-}
-function closeCheckout(){document.getElementById("checkoutLayer").classList.add("hidden")}
-function openProofDb(){
-  return new Promise((resolve,reject)=>{
-    const q=indexedDB.open("docroi-order-proof-v1",1);
-    q.onupgradeneeded=()=>{if(!q.result.objectStoreNames.contains("proofs"))q.result.createObjectStore("proofs")};
-    q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error)
-  });
-}
-async function storeProof(file,key){
-  if(PREVIEW||!file)return;
-  try{
-    const db=await openProofDb();
-    await new Promise((resolve,reject)=>{
-      const tx=db.transaction("proofs","readwrite");
-      tx.objectStore("proofs").put(file,key);
-      tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)
-    });
-    db.close();
-  }catch(e){console.warn("Could not persist transfer proof locally",e)}
-}
-async function sendOrderCentral(order,file){
-  const a=S.marketing.analytics||{};
-  if(a.collectionMode!=="webhook"||!a.webhookUrl||PREVIEW)return;
-  try{
-    const fd=new FormData();
-    fd.append("record_type","purchase_order");
-    fd.append("order",JSON.stringify(order));
-    if(file)fd.append("payment_proof",file,file.name);
-    await fetch(a.webhookUrl,{method:"POST",body:fd,keepalive:true});
-  }catch(e){console.warn("Central order handoff failed",e)}
-}
-function buildOrderMailto(order){
-  const to=String(S.checkout?.orderContactEmail||"").trim();
-  if(!to||to==="PENDING"||to==="UNKNOWN"||to.endsWith(".invalid"))return"";
-  const subject=encodeURIComponent("New order "+order.order_number+" · "+order.product_name);
-  const body=encodeURIComponent([
-    "ORDER "+order.order_number,
-    "",
-    "Customer email: "+order.customer_email,
-    "Customer phone: "+order.customer_phone,
-    "Product: "+order.product_name,
-    "SKU: "+order.sku,
-    "Quantity: "+order.quantity,
-    "Order total: "+order.order_total+" "+(S.pricing.currency||"EUR"),
-    "Transfer reference: "+order.transfer_reference,
-    "Transfer proof: "+order.payment_proof_filename,
-    "Status: "+order.order_status,
-    "",
-    "This message is the handoff to the next Order & Billing process."
-  ].join("\\n"));
-  return"mailto:"+encodeURIComponent(to)+"?subject="+subject+"&body="+body;
-}
-async function submitCheckout(){
-  const email=document.getElementById("coEmail").value.trim();
-  const phone=document.getElementById("coPhone").value.trim();
-  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return alert("Enter a valid email.");
-  if(!phone)return alert("Enter a contact phone number.");
-  if(S.checkout.proofRequired&&!checkoutProofFile)return alert("Upload the bank-transfer proof as a PDF before buying.");
-  if(checkoutProofFile&&checkoutProofFile.type!=="application/pdf"&&!checkoutProofFile.name.toLowerCase().endsWith(".pdf"))return alert("The transfer proof must be a PDF.");
-  if(!document.getElementById("coLegalAccept").checked)return alert("Accept the order / payment verification notice before buying.");
-
-  const o=orderLineData(),deep=deepestState(),now=new Date().toISOString(),customerKey=await stableCustomerKey(email);
-  const order={
-    schema_version:"DOCROI_MKT_TO_PURCHASE_2.1",
-    dataset_id:(S.marketing.analytics||{}).datasetId||"DOC_ROI_INSIGHTS_MKT_TO_PURCHASE",
-    order_id:checkoutOrderNo,
-    order_number:checkoutOrderNo,
-    order_created_at:now,
-    order_status:"TRANSFER_PROOF_SUBMITTED",
-    session_id:sessionId,
-    visitor_key:visitorKey||"UNKNOWN",
-    customer_key:customerKey,
-    source_customer_id:email.toLowerCase(),
-    customer_email:email,
-    customer_phone:phone,
-    utm_source:ACQ.source||"UNKNOWN",
-    utm_medium:ACQ.medium||"UNKNOWN",
-    utm_campaign:ACQ.campaign||"UNKNOWN",
-    utm_content:ACQ.content||"UNKNOWN",
-    utm_term:ACQ.term||"UNKNOWN",
-    utm_id:ACQ.id||"UNKNOWN",
-    entry_4p:ACQ.entryPolicy||"UNKNOWN",
-    first_path:firstPath||"UNKNOWN",
-    deepest_path:deep.path,
-    deepest_depth:deep.depth,
-    journey_sequence:events.filter(e=>e.session_id===sessionId).map(e=>e.path+":"+e.action).concat(["BUY_NOW","TRANSFER_PROOF","ORDER_SUBMITTED"]).join(" > "),
-    ...o,
-    active_benefit_type:active?.type||"NONE",
-    active_benefit_label:active?.label||"NONE",
-    product_interest:productInterest,
-    payment_method:S.checkout.paymentMethod||"Bank transfer",
-    bank_account_reference:S.checkout.bankAccount||"UNKNOWN",
-    transfer_reference:checkoutOrderNo,
-    payment_proof_status:checkoutProofFile?"UPLOADED":"NOT_REQUIRED",
-    payment_proof_filename:checkoutProofFile?.name||"NONE",
-    payment_proof_size_bytes:checkoutProofFile?.size||0,
-    proof_uploaded_at:checkoutProofFile?now:"UNKNOWN",
-    terms_accepted:"YES",
-    data_processing_accepted:"YES",
-    order_submitted_at:now,
-    payment_verified:"PENDING",
-    confirmation_deadline:confirmationDeadline(),
-    order_contact_email:S.checkout.orderContactEmail||"UNKNOWN",
-    order_contact_phone:S.checkout.orderContactPhone||"UNKNOWN",
-    data_controller_email:S.checkout.dataControllerEmail||"UNKNOWN",
-    acquisition_cost:(()=>{const E=S.marketing.economics||{},m=String(ACQ.medium||"").toLowerCase(),cpv=(a,b)=>Number(b)>0?Number(a||0)/Number(b):0;if(m.includes("cpc")||m.includes("ppc"))return cpv(E.cpcSpend,E.cpcVisits);if(m.includes("paid_social"))return cpv(E.paidSocialSpend,E.paidSocialVisits);if(m.includes("crm")||m.includes("email"))return cpv(E.crmSpend,E.crmVisits);if(m.includes("video")||m.includes("youtube"))return cpv(E.videoSpend,E.videoVisits);return Number(E.otherAcquisitionCostPerVisit||0)})(),
-    product_cost:o.quantity*Number(S.marketing.economics.unitCost||0),
-    packaging_cost:Number(S.marketing.economics.packagingBaseCost||0),
-    delivery_cost_estimate:Number(S.marketing.economics.deliveryCost||0),
-    fulfilment_cost:Number(S.marketing.economics.fulfilmentCost||0),
-    handoff_status:"READY_FOR_ORDER_AND_BILLING"
-  };
-
-  bridge.push(order);orders.push(order);persist();
-  await storeProof(checkoutProofFile,checkoutOrderNo);
-  await sendOrderCentral(order,checkoutProofFile);
-  track("SYSTEM","order_submitted",checkoutOrderNo+" · transfer proof submitted");
-
-  const st=document.getElementById("coStatus");
-  st.classList.add("show");
-  st.innerHTML='<h3>Order submitted · '+checkoutOrderNo+'</h3>'+
-    '<p>The transfer proof has been registered as <strong>pending verification</strong>. Payment is not treated as confirmed until the seller verifies it.</p>'+
-    '<p><strong>Next process:</strong> Order & Billing.</p>';
-  document.getElementById("coSubmit").disabled=true;
-
-  const mailto=buildOrderMailto(order);
-  if(mailto&&!PREVIEW)setTimeout(()=>{window.location.href=mailto},120);
-}
-function render(){document.getElementById("experienceGrid").innerHTML=experienceHtml();document.querySelectorAll("[data-img]").forEach(btn=>btn.onclick=()=>{const sorted=[...S.media].sort((a,b)=>a.order-b.order),x=sorted[+btn.dataset.img],src=x?.data||x?.url||"";const img=document.getElementById("mainMedia");if(img&&src){img.src=src;document.querySelectorAll(".thumb").forEach(t=>t.classList.remove("active"));btn.classList.add("active")}});document.getElementById("buyBtn").onclick=()=>{track("SYSTEM","buy_clicked","Primary Buy Now CTA clicked");openCheckout()};document.getElementById("saveBtn").onclick=()=>track("SYSTEM","save_product","Saved for later")}
+function render(){document.getElementById("experienceGrid").innerHTML=experienceHtml();document.querySelectorAll("[data-img]").forEach(btn=>btn.onclick=()=>{const sorted=[...S.media].sort((a,b)=>a.order-b.order),x=sorted[+btn.dataset.img],src=x?.data||x?.url||"";const img=document.getElementById("mainMedia");if(img&&src){img.src=src;document.querySelectorAll(".thumb").forEach(t=>t.classList.remove("active"));btn.classList.add("active")}});document.getElementById("buyBtn").onclick=()=>{track("SYSTEM","buy_clicked","Primary Buy CTA clicked · purchase process continues outside this page")};document.getElementById("saveBtn").onclick=()=>track("SYSTEM","save_product","Saved for later")}
 window.reveal=reveal;window.resetPath=resetPath;window.submitContact=submitContact;
-document.getElementById("coCancel").onclick=closeCheckout;
-const coAccountToggle=document.getElementById("coAccountToggle");if(coAccountToggle)coAccountToggle.onclick=()=>{bankSecretVisible=!bankSecretVisible;updateBankAccountDisplay()};
-document.getElementById("coSubmit").onclick=submitCheckout;
-document.getElementById("coProof").onchange=e=>{
-  checkoutProofFile=e.target.files?.[0]||null;
-  const s=document.getElementById("coProofState");
-  if(!checkoutProofFile){s.textContent="PDF transfer proof not uploaded yet.";return}
-  if(checkoutProofFile.type!=="application/pdf"&&!checkoutProofFile.name.toLowerCase().endsWith(".pdf")){
-    checkoutProofFile=null;e.target.value="";s.textContent="Only PDF files are accepted.";return
-  }
-  s.textContent="PDF ready: "+checkoutProofFile.name+" · "+Math.round(checkoutProofFile.size/1024)+" KB";
-  track("SYSTEM","transfer_proof_selected",checkoutProofFile.name)
-};
 if(!PREVIEW){document.getElementById("ok").onclick=()=>{consent="accepted";if(!visitorKey)visitorKey="VIS-"+Math.random().toString(36).slice(2,10).toUpperCase();setFirstPartyCookie(VISITOR_COOKIE,visitorKey);persist();document.getElementById("privacy").classList.add("hidden");track("SYSTEM","consent_accepted","First-party session tracking enabled")};document.getElementById("ess").onclick=()=>{consent="essential";document.getElementById("privacy").classList.add("hidden")};document.getElementById("analyticsBtn").onclick=()=>{document.getElementById("analyticsModal").classList.remove("hidden");renderAnalytics()};document.getElementById("closeAnalytics").onclick=()=>document.getElementById("analyticsModal").classList.add("hidden");function dateOk(ts){const d=String(ts||"").slice(0,10),f=document.getElementById("analyticsFrom").value,t=document.getElementById("analyticsTo").value;return(!f||d>=f)&&(!t||d<=t)}function localCsv(rows,keys){return[keys,...rows.map(r=>keys.map(k=>r[k]??""))].map(a=>a.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(",")).join("\\n")}function downloadLocal(name,text){const u=URL.createObjectURL(new Blob([text],{type:"text/csv"})),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),500)}function renderAnalytics(){const ev=events.filter(e=>dateOk(e.time)),br=bridge.filter(e=>dateOk(e.order_submitted_at||e.event_timestamp));document.getElementById("analyticsKpis").innerHTML='<div><span>Events</span><strong>'+ev.length+'</strong></div><div><span>Orders submitted</span><strong>'+br.length+'</strong></div><div><span>Visitor key</span><strong>'+(visitorKey||"—")+'</strong></div>'}document.getElementById("analyticsFrom").onchange=renderAnalytics;document.getElementById("analyticsTo").onchange=renderAnalytics;document.getElementById("downloadAnalyticsPurchase").onclick=()=>{const rows=bridge.filter(e=>dateOk(e.order_submitted_at||e.event_timestamp));if(!rows.length)return alert("No completed purchase handoff rows in this date range.");const keys=["schema_version","dataset_id","order_id","order_number","order_created_at","order_status","session_id","visitor_key","customer_key","source_customer_id","customer_email","customer_phone","utm_source","utm_medium","utm_campaign","utm_content","utm_term","utm_id","entry_4p","first_path","deepest_path","deepest_depth","journey_sequence","product_id","sku","product_name","variant","quantity","list_price","applied_unit_price","product_subtotal","shipping_before","shipping_after","order_total","active_benefit_type","active_benefit_label","product_interest","payment_method","bank_account_reference","transfer_reference","payment_proof_status","payment_proof_filename","payment_proof_size_bytes","proof_uploaded_at","terms_accepted","data_processing_accepted","order_submitted_at","payment_verified","confirmation_deadline","order_contact_email","order_contact_phone","data_controller_email","product_cost","packaging_cost","delivery_cost_estimate","fulfilment_cost","handoff_status"];downloadLocal("DOC_ROI_INSIGHTS_MKT_TO_PURCHASE.csv",localCsv(rows,keys))};
 document.getElementById("downloadAnalyticsMarketing").onclick=()=>{const orders=bridge.filter(e=>dateOk(e.order_submitted_at||e.event_timestamp));if(!orders.length)return alert("No submitted orders in this date range.");const E=S.marketing.economics||{},num=v=>Number(String(v??0).replace(",",".").replace(/[^0-9.-]/g,""))||0,cpv=(a,b)=>Number(b)>0?Number(a||0)/Number(b):0,acq=m=>{m=String(m||"").toLowerCase();if(m.includes("cpc")||m.includes("ppc"))return cpv(E.cpcSpend,E.cpcVisits);if(m.includes("paid_social"))return cpv(E.paidSocialSpend,E.paidSocialVisits);if(m.includes("crm")||m.includes("email"))return cpv(E.crmSpend,E.crmVisits);if(m.includes("video")||m.includes("youtube"))return cpv(E.videoSpend,E.videoVisits);return Number(E.otherAcquisitionCostPerVisit||0)};const rows=orders.map(o=>{const list=num(o.list_price),applied=num(o.applied_unit_price),qty=num(o.quantity)||1,orderValue=num(o.order_total),type=String(o.active_benefit_type||"").toUpperCase(),label=String(o.active_benefit_label||"").toUpperCase(),acquisition=acq(o.utm_medium),priceCost=(type.includes("PRICE")||label.includes("DISCOUNT"))?Math.max(0,(list-applied)*qty):0,promotion=(type.includes("BRAND")||type.includes("PROMOTION")||type.includes("PROMO"))?Number(E.giftCost||0):0,placement=(type.includes("DISTRIBUT")||type.includes("PLACEMENT")||label.includes("DELIVERY"))?Math.max(0,Number(E.deliveryCost||0)-num(o.shipping_after)):0,referral=(type.includes("PRODUCT")||label.includes("REFERRAL"))?Number(E.referralRewardCost||0):0,mkt=acquisition+priceCost+promotion+placement+referral,product=qty*Number(E.unitCost||0),pack=Number(E.packagingBaseCost||0),fulfil=Number(E.fulfilmentCost||0),payment=orderValue*Number(E.paymentPct||0)/100+Number(E.paymentFixedCost||0),processing=Number(E.orderProcessingCost||0),total=mkt+product+pack+fulfil+payment+processing,realized=String(o.payment_verified||"").toUpperCase().includes("YES")?orderValue:0,contribution=realized-total,sessionEvents=events.filter(e=>e.session_id===o.session_id);return {...o,journey_sequence:o.journey_sequence||sessionEvents.map(e=>e.path+":"+e.action).join(" > "),acquisition_cost:acquisition,price_discount_cost:priceCost,promotion_cost:promotion,placement_cost:placement,referral_cost:referral,marketing_cost:mkt,product_cost:product,packaging_cost:pack,fulfilment_cost:fulfil,payment_cost:payment,order_processing_cost:processing,total_attributable_cost:total,order_value:orderValue,realized_revenue:realized,customer_contribution:contribution,marketing_roi:mkt>0?(realized-mkt)/mkt:"NA",customer_roi:total>0?contribution/total:"NA"}});const keys=["customer_key","source_customer_id","visitor_key","session_id","order_number","utm_source","utm_medium","utm_campaign","utm_content","utm_term","utm_id","entry_4p","first_path","deepest_path","deepest_depth","journey_sequence","product_id","sku","product_name","variant","quantity","active_benefit_type","active_benefit_label","product_interest","acquisition_cost","price_discount_cost","promotion_cost","placement_cost","referral_cost","marketing_cost","product_cost","packaging_cost","fulfilment_cost","payment_cost","order_processing_cost","total_attributable_cost","order_value","realized_revenue","customer_contribution","marketing_roi","customer_roi","handoff_status"];downloadLocal("DOC_ROI_MARKETING_CRM_ATTRIBUTION_DATA.csv",localCsv(rows,keys))};document.getElementById("accountBtn").onclick=()=>document.getElementById("accountModal").classList.remove("hidden");document.getElementById("closeAccount").onclick=()=>document.getElementById("accountModal").classList.add("hidden");document.getElementById("registerBtn").onclick=()=>{const email=document.getElementById("accountEmail").value.trim(),password=document.getElementById("accountPassword").value;if(!email||!password)return alert("Enter email and password.");document.getElementById("eventLog").innerHTML=events.length?events.map(e=>'<div class="event"><strong>'+e.path+' · '+e.action+'</strong><br><span>'+new Date(e.time).toLocaleTimeString()+' · '+e.detail+'</span></div>').join(""):'<div class="event">No tracked events yet.</div>'}}
 render();
@@ -2125,7 +1832,6 @@ function resetAll(){if(!confirm('Reset the complete in-memory project?'))return;
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>switchMode(b.dataset.mode));
 const methodNav=document.getElementById('methodNav');if(methodNav)methodNav.onclick=e=>{e.preventDefault();smartScrollTo(document.getElementById('method'))};
 document.querySelectorAll('[data-jump]').forEach(b=>b.onclick=()=>switchMode(b.dataset.jump));
-document.getElementById('headerExample').onclick=loadExample;
 document.getElementById('loadExample').onclick=loadExample;
 const strategicGoalsFile=document.getElementById('strategicGoalsFile');if(strategicGoalsFile)strategicGoalsFile.onchange=e=>{const f=e.target.files?.[0];if(f)loadStrategicGoalsFile(f)};
 const strategicGoalsExample=document.getElementById('strategicGoalsExample');if(strategicGoalsExample)strategicGoalsExample.onclick=loadExample;
@@ -2138,6 +1844,7 @@ document.getElementById('importProject').onchange=async e=>{const f=e.target.fil
 document.addEventListener('change',e=>{if(e.target?.id==='kwfile'){const f=e.target.files?.[0];if(f)loadKw(f)}});
 document.addEventListener('click',e=>{if(e.target?.id==='clearKw'){S.marketing.keywords={PRODUCT:[],PRICE:[],PROMOTION:[],PLACEMENT:[]};S.marketing.keywordSource='UNKNOWN';save();renderEditor();renderSteps();renderHeader()}});
 document.getElementById('downloadHtml').onclick=async()=>dl('doc-roi-product-experience-conversion.html',await standalone(),'text/html');
+const attrHtmlBtn=document.getElementById('downloadAttributionHtml');if(attrHtmlBtn)attrHtmlBtn.onclick=async()=>dl('doc-roi-product-experience-conversion.html',await standalone(),'text/html');
 document.getElementById('downloadConfigCsv').onclick=downloadProjectCsv;
 document.getElementById('exportPdf').onclick=printFinal;
 document.getElementById('printLanding').onclick=printFinal;
